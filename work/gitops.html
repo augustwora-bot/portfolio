@@ -1,0 +1,145 @@
+﻿<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0a0a'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='monospace' font-size='18' font-weight='700' fill='%237cff9b'%3Ew%3C/text%3E%3C/svg%3E" />
+<title>GitOps CI/CD — snowinaugust.dev</title>
+<meta name="description" content="GitOps CI/CD Pipeline case study · GitHub Actions + ArgoCD + k3s · rolling update strategy · the same pipeline powering this site." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" />
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin: 0; padding: 0; background: #0a0a0a; scroll-behavior: smooth; }
+  body {
+    font-family: 'Geist', 'IBM Plex Sans Thai', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    color: #e2e2e2;
+  }
+  html[lang="th"] body { font-family: 'IBM Plex Sans Thai', 'Geist', system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  a { color: inherit; }
+  @media (max-width: 1024px) and (min-width: 861px) {
+    .gx-body-grid { grid-template-columns: 140px 1fr !important; gap: 32px !important; }
+  }
+  @media (max-width: 860px) {
+    .gx-body-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
+    .gx-glance { grid-template-columns: repeat(2, 1fr) !important; }
+    .gx-pipeline { grid-template-columns: 1fr !important; }
+    .gx-stack { grid-template-columns: 1fr !important; }
+  }
+  @keyframes gx-pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 8px #2da44e, 0 0 0 0 rgba(45,164,78,0.55); }
+    50%      { opacity: 0.55; box-shadow: 0 0 10px #2da44e, 0 0 0 6px rgba(45,164,78,0); }
+  }
+  @keyframes gx-flow {
+    0%   { stroke-dashoffset: 24; }
+    100% { stroke-dashoffset: 0; }
+  }
+  .gx-lightbox {
+    display: none; position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.92); cursor: zoom-out;
+    align-items: center; justify-content: center;
+  }
+  .gx-lightbox.open { display: flex; }
+  .gx-lightbox img {
+    max-width: 92vw; max-height: 92vh;
+    object-fit: contain; border: 1px solid #333;
+    box-shadow: 0 0 60px rgba(0,0,0,0.8);
+  }
+  .gx-zoomable { cursor: zoom-in; }
+  .zoom-tag {
+    position: absolute; top: 10px; right: 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 1.5px; color: #c4c4c4;
+    background: rgba(10,10,10,0.78); padding: 5px 9px;
+    border: 1px solid rgba(255,255,255,0.12);
+    pointer-events: none; z-index: 5; user-select: none;
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div class="gx-lightbox" id="gx-lightbox" onclick="this.classList.remove('open')">
+  <img id="gx-lightbox-img" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="zoomed" />
+</div>
+<script>
+function gxZoom(src) {
+  document.getElementById('gx-lightbox-img').src = src;
+  document.getElementById('gx-lightbox').classList.add('open');
+}
+function zoomSvg(svgEl) {
+  if (!svgEl) return;
+  // Inline SVG → blob URL so the lightbox can show it as an image (which scales nicely)
+  const cloned = svgEl.cloneNode(true);
+  // Ensure viewBox + explicit width to scale within lightbox
+  if (!cloned.getAttribute('viewBox') && svgEl.viewBox && svgEl.viewBox.baseVal) {
+    const vb = svgEl.viewBox.baseVal;
+    cloned.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.width} ${vb.height}`);
+  }
+  cloned.removeAttribute('style');
+  cloned.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  cloned.setAttribute('width', '1600');
+  cloned.setAttribute('height', '800');
+  const xml = new XMLSerializer().serializeToString(cloned);
+  const svg64 = btoa(unescape(encodeURIComponent(xml)));
+  gxZoom('data:image/svg+xml;base64,' + svg64);
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') document.getElementById('gx-lightbox').classList.remove('open');
+});
+(function() {
+  function decorate() {
+    document.querySelectorAll('.cs-zoomable, .gx-zoomable').forEach(function(el) {
+      if (el.dataset.zoomTagged) return;
+      // If el is a container (not <img>), badge goes INSIDE el.
+      // If el is the <img> itself, badge goes into its parent wrapper.
+      var host = (el.tagName === 'IMG') ? el.parentNode : el;
+      if (!host) return;
+      if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+      var b = document.createElement('div');
+      b.textContent = 'CLICK TO ZOOM ⤢';
+      b.className = 'zoom-tag';
+      host.appendChild(b);
+      el.dataset.zoomTagged = '1';
+    });
+  }
+  new MutationObserver(decorate).observe(document.body, { childList: true, subtree: true });
+  decorate();
+})();
+</script>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel">
+window.VesperTheme = {
+  "bg": "#0a0a0a",
+  "bgElev": "#111111",
+  "bgElev2": "#171717",
+  "border": "#1f1f1f",
+  "borderStrong": "#2a2a2a",
+  "textDim": "#a0a0a0",
+  "text": "#e2e2e2",
+  "textBright": "#ffffff",
+  "accent": "#2da44e",
+  "accentDim": "#1a5d2c",
+  "sans": "'Geist','IBM Plex Sans Thai',-apple-system,system-ui,sans-serif",
+  "mono": "'JetBrains Mono','Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace",
+};
+</script>
+
+<script type="text/babel" src="gitops-page.jsx"></script>
+<script type="text/babel" src="../pig-mascot.jsx"></script>
+<script type="text/babel">
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <>
+    <GitOpsPage />
+    <CursorPig />
+  </>
+);
+</script>
+</body>
+</html>

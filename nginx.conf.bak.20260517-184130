@@ -1,0 +1,47 @@
+server {
+    listen       80;
+    listen       [::]:80;
+    server_name  _;
+
+    root   /usr/share/nginx/html;
+    index  index.html;
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+
+    # Hide nginx version
+    server_tokens off;
+
+    # Healthcheck endpoint (Docker + k8s probe)
+    location = /healthz {
+        access_log off;
+        add_header Content-Type "text/plain";
+        return 200 "ok\n";
+    }
+
+    # Gzip
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_types
+        text/plain
+        text/css
+        text/javascript
+        application/javascript
+        application/json
+        image/svg+xml;
+
+    # Long-cache for static assets
+    location ~* \.(css|js|jsx|svg|png|jpg|jpeg|webp|woff2?|mp3)$ {
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # HTML: no cache, always fresh
+    location ~ \.html$ {
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
+    }
+}

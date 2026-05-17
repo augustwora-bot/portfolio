@@ -1,0 +1,41 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Editor / IDE
+.vscode
+.idea
+.cursor
+.claude
+*.swp
+*.swo
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Backups + tempfiles
+*.bak
+*.bak.*
+*.tmp
+*.log
+
+# Docs (not needed in image)
+*.md
+README*
+LICENSE*
+
+# Docker build artifacts (don't include self)
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml
+
+# Node (defensive · กันเผื่อ npm install ในอนาคต)
+node_modules
+package*.json
+
+# Uploads folder (lesson learned v2.6.13)
+uploads

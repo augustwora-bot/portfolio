@@ -1,0 +1,224 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+<title>Vesper — snowinaugust.dev</title>
+<meta name="description" content="Vesper — snowinaugust.dev — Systems-thinking engineer building AI infrastructure that ships." />
+<meta name="author" content="worawalan" />
+<meta name="theme-color" content="#0a0a0a" />
+<!-- Open Graph / social preview -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Vesper — snowinaugust.dev" />
+<meta property="og:description" content="Systems-thinking engineer building AI infrastructure that ships." />
+<meta property="og:url" content="https://snowinaugust.dev" />
+<meta property="og:image" content="https://snowinaugust.dev/assets/portrait.jpg" />
+<meta property="og:site_name" content="snowinaugust.dev" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Vesper — snowinaugust.dev" />
+<meta name="twitter:description" content="Systems-thinking engineer building AI infrastructure that ships." />
+<meta name="twitter:image" content="https://snowinaugust.dev/assets/portrait.jpg" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0a0a'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='monospace' font-size='18' font-weight='700' fill='%237cff9b'%3Ew%3C/text%3E%3C/svg%3E" />
+<link rel="preload" href="assets/vault-graph-img.png" as="image" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" />
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin: 0; padding: 0; background: #0a0a0a; }
+  body {
+    font-family: 'Geist', 'IBM Plex Sans Thai', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    color: #d4d4d4;
+  }
+  html[lang="th"] body { font-family: 'IBM Plex Sans Thai', 'Geist', system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  a { color: inherit; }
+  input::placeholder, textarea::placeholder { color: #6b6b6b; }
+  input:focus, textarea:focus { border-color: #7cff9b !important; }
+  @keyframes v-blink { 0%, 100% { opacity: 1 } 50% { opacity: 0 } }
+  @keyframes vg-drift {
+    0%   { transform: translate(-50%, -50%) scale(1.0) rotate(0deg); }
+    25%  { transform: translate(-50%, -50%) scale(1.02) rotate(4deg); }
+    50%  { transform: translate(-50%, -50%) scale(1.04) rotate(0deg); }
+    75%  { transform: translate(-50%, -50%) scale(1.02) rotate(-4deg); }
+    100% { transform: translate(-50%, -50%) scale(1.0) rotate(0deg); }
+  }
+  @keyframes vg-glow {
+    0%, 100% { opacity: 0.6; }
+    50%      { opacity: 1; }
+  }
+  @keyframes v-kenburns {
+    0%   { transform: scale(1.08) translate3d(0, 0, 0); }
+    50%  { transform: scale(1.18) translate3d(-1.5%, -1%, 0); }
+    100% { transform: scale(1.08) translate3d(0, 0, 0); }
+  }
+  .hero-bg {
+    position: relative;
+    isolation: isolate;
+    background: #0a0a0a;
+  }
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    inset: -6% -4%;
+    background-image: url('assets/hero-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transform-origin: center 40%;
+    animation: v-kenburns 38s ease-in-out infinite;
+    will-change: transform;
+    z-index: 0;
+    /* parallax offset written by JS → --py */
+    translate: 0 var(--py, 0px);
+  }
+  .hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(10,10,10,0.45) 0%, rgba(10,10,10,0.35) 40%, rgba(10,10,10,0.75) 88%, #0a0a0a 100%);
+    z-index: 1;
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-bg::before { animation: none; }
+  }
+  .stack-chip:hover {
+    background: rgb(124, 255, 155) !important;
+    border-color: rgb(124, 255, 155) !important;
+    color: #0a0a0a !important;
+  }
+  .stack-chip:hover svg { stroke: #0a0a0a !important; }
+  .cert-card:hover { border-color: #7cff9b !important; background: #131313 !important; transform: translateY(-2px); }
+  .work-card:hover {
+    border-color: #7cff9b !important;
+    background: #131313 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(124,255,155,0.08), 0 4px 12px rgba(0,0,0,0.4);
+  }
+  .work-card::after {
+    content: '↗';
+    position: absolute; top: 14px; right: 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: 14px;
+    color: transparent; transition: color 200ms, transform 200ms;
+    pointer-events: none;
+  }
+  .work-card:hover::after { color: #7cff9b; transform: translate(2px, -2px); }
+
+  /* Light-theme hover overrides */
+  body[data-theme="light"] .stack-chip:hover {
+    background: #1f8f3d !important;
+    border-color: #1f8f3d !important;
+    color: #ffffff !important;
+  }
+  body[data-theme="light"] .stack-chip:hover svg { stroke: #ffffff !important; }
+  body[data-theme="light"] .cert-card:hover {
+    border-color: #1f8f3d !important;
+    background: #f4f4f2 !important;
+    transform: translateY(-2px);
+  }
+  body[data-theme="light"] .work-card:hover {
+    border-color: #1f8f3d !important;
+    background: #f4f4f2 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(31,143,61,0.10), 0 4px 12px rgba(0,0,0,0.08);
+  }
+  body[data-theme="light"] .work-card:hover::after { color: #1f8f3d; transform: translate(2px, -2px); }
+  /* No-JS fallback — core content visible */
+  .nojs { display: none; }
+  noscript + style + .nojs { display: block; }
+  @media (max-width: 1024px) and (min-width: 861px) {
+    .work-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .stack-row { grid-template-columns: 1fr !important; }
+    .cert-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .hero-grid { gap: 32px !important; }
+  }
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+    .work-grid { grid-template-columns: 1fr !important; }
+    .stack-row { grid-template-columns: 1fr !important; }
+    .contact-grid { grid-template-columns: 1fr !important; }
+    .cert-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
+</head>
+<body>
+<div id="root">
+  <!-- Progressive enhancement fallback — basic static content -->
+  <noscript>
+    <main style="max-width:720px;margin:64px auto;padding:0 24px;font-family:Geist,system-ui,sans-serif;color:#d4d4d4">
+      <h1 style="font-size:72px;margin:0;letter-spacing:-0.05em;color:#f5f5f5">Vesper — snowinaugust.dev</h1>
+      <p style="font-family:JetBrains Mono,monospace;color:#7cff9b;font-size:13px">docker · linux · mcp · multi-agent · ai-infra</p>
+      <p style="font-size:18px;line-height:1.6">Infra engineer shipping AI systems end-to-end — from VPS to vector store.</p>
+    </main>
+  </noscript>
+</div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<!-- Inline the theme + StackLogo we need, standalone (no design-canvas dep) -->
+<script type="text/babel">
+window.VesperTheme = /*EDITMODE-BEGIN*/{
+  "bg": "#0a0a0a",
+  "bgElev": "#111111",
+  "bgElev2": "#171717",
+  "border": "#1f1f1f",
+  "borderStrong": "#2a2a2a",
+  "textDim": "#a0a0a0",
+  "text": "#e2e2e2",
+  "textBright": "#ffffff",
+  "accent": "#7cff9b",
+  "accentDim": "#3d7d4d",
+  "red": "#ff5f56",
+  "amber": "#ffbd2e",
+  "green": "#27c93f",
+  "sans": "'Geist','IBM Plex Sans Thai',-apple-system,system-ui,sans-serif",
+  "mono": "'JetBrains Mono','Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace",
+  "theme": "dark"
+}/*EDITMODE-END*/;
+</script>
+
+<script type="text/babel" src="work-stack.jsx"></script>
+<script type="text/babel" src="i18n.jsx"></script>
+<script type="text/babel" src="bg-audio.jsx"></script>
+<script type="text/babel" src="pig-mascot.jsx"></script>
+<script type="text/babel" src="mini-game.jsx"></script>
+<script type="text/babel" src="worawalan-site.jsx"></script>
+
+<script type="text/babel">
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <>
+    <VesperSite />
+    <BgAudio />
+    <CursorPig />
+  </>
+);
+
+/* Parallax scroll for .hero-bg ::before — GPU-friendly via CSS var */
+(function init() {
+  const hero = document.querySelector('.hero-bg');
+  if (!hero) { requestAnimationFrame(init); return; }
+  let ticking = false;
+  const PARALLAX_RATE = 0.35; // lower = subtler
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const rect = hero.getBoundingClientRect();
+      // Only compute while hero is in/near viewport
+      if (rect.bottom > -100 && rect.top < window.innerHeight + 100) {
+        const offset = -rect.top * PARALLAX_RATE;
+        hero.style.setProperty('--py', offset.toFixed(1) + 'px');
+      }
+      ticking = false;
+    });
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
