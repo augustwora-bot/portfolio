@@ -23,7 +23,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: portfolio
-          image: ghcr.io/augustwora-bot/portfolio:v2-snyk2
+          image: ghcr.io/augustwora-bot/portfolio:v2-snyk3
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80

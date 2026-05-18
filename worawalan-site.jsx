@@ -859,6 +859,9 @@ function Footer() {
         <a href="https://snyk.io/test/github/augustwora-bot/portfolio" target="_blank" rel="noopener" style={{ display: 'inline-flex' }}>
           <img src="https://snyk.io/test/github/augustwora-bot/portfolio/badge.svg" alt="Snyk Security" style={{ height: 18 }} />
         </a>
+        <a href="https://sonarcloud.io/summary/new_code?id=augustwora-bot_portfolio" target="_blank" rel="noopener" style={{ display: 'inline-flex' }}>
+          <img src="https://sonarcloud.io/api/project_badges/measure?project=augustwora-bot_portfolio&metric=sqale_rating" alt="Maintainability Rating" style={{ height: 18 }} />
+        </a>
       </div>
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
