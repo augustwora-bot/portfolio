@@ -870,6 +870,7 @@ function Footer() {
       <div style={{ fontFamily: T.mono, fontSize: 11, color: T.textDim }}>
         {t.footer.built}
       </div>
+      </div>
     </footer>
   );
 }
