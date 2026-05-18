@@ -1,4 +1,4 @@
-// worawalan-site.jsx — Full single-page prototype
+﻿// worawalan-site.jsx — Full single-page prototype
 // Hero v3 + Now + Work cards + Stack tags + Writing
 // Depends on: VesperTheme (inline in worawalan.html), LangProvider/useLang (i18n.jsx), StackLogo (work-stack.jsx)
 
@@ -851,9 +851,19 @@ function Footer() {
     <footer style={{
       maxWidth: 1120, margin: '0 auto', padding: '32px',
       borderTop: `1px solid ${T.border}`,
-      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-      flexWrap: 'wrap', gap: 16,
     }}>
+      <div style={{
+        display: 'flex', justifyContent: 'center', gap: 12,
+        marginBottom: 24, opacity: 0.6,
+      }}>
+        <a href="https://snyk.io/test/github/augustwora-bot/portfolio" target="_blank" rel="noopener" style={{ display: 'inline-flex' }}>
+          <img src="https://snyk.io/test/github/augustwora-bot/portfolio/badge.svg" alt="Snyk Security" style={{ height: 18 }} />
+        </a>
+      </div>
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        flexWrap: 'wrap', gap: 16,
+      }}>
       <div style={{ fontFamily: T.mono, fontSize: 11, color: T.textDim }}>
         © 2026 worawalan · snowinaugust.dev
       </div>
